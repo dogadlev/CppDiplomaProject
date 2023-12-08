@@ -14,6 +14,8 @@ public:
 
     std::string getConfig(const std::string &) const;
 
+    virtual ~Config() = default;
+
 private:
     std::unordered_map<std::string, std::string> configs;
     
