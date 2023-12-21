@@ -1,10 +1,5 @@
 #pragma once
 
-#include <iostream>
-//#include <regex> // Regular Expressions. The standard C++ library provides support for regular expressions in the <regex> header through a series of operations.
-#include <vector>
-#include <string>
-
 #include <boost/beast/core.hpp>
 #include <boost/beast/ssl.hpp>
 #include <boost/beast/http.hpp>
@@ -13,7 +8,19 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ssl.hpp>
 #include <openssl/ssl.h>
-
+#include <iostream>
+#include <regex>
+#include <vector>
+#include <string>
 #include "link.h"
+
+
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace net = boost::asio;
+namespace ip = boost::asio::ip;
+namespace ssl = boost::asio::ssl;
+
+using tcp = boost::asio::ip::tcp;
 
 std::string get_html_content(const Link&);

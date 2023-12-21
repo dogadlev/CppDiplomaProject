@@ -1,13 +1,5 @@
 #include "http_utils.h"
 
-namespace beast = boost::beast;
-namespace http = beast::http;
-namespace net = boost::asio;
-namespace ip = boost::asio::ip;
-namespace ssl = boost::asio::ssl;
-
-using tcp = boost::asio::ip::tcp;
-
 bool is_text(const boost::beast::multi_buffer::const_buffers_type& b)
 {
 	for (auto itr = b.begin(); itr != b.end(); itr++)
@@ -55,7 +47,8 @@ std::string get_html_content(const Link& link)
 				});
 
 
-			if (!SSL_set_tlsext_host_name(stream.native_handle(), host.c_str())) {
+			if (!SSL_set_tlsext_host_name(stream.native_handle(), host.c_str())) 
+			{
 				beast::error_code ec{static_cast<int>(::ERR_get_error()), net::error::get_ssl_category()};
 				throw beast::system_error{ec};
 			}
@@ -63,7 +56,6 @@ std::string get_html_content(const Link& link)
 			ip::tcp::resolver resolver(ioc); // The ip::basic_resolver class template provides the ability to resolve a query to a list of endpoints.
 			get_lowest_layer(stream).connect(resolver.resolve({ host, "https" }));
 			get_lowest_layer(stream).expires_after(std::chrono::seconds(30));
-
 
 			http::request<http::empty_body> req{http::verb::get, query, 11}; // Set up an HTTP GET request message.
 			req.set(http::field::host, host);
@@ -87,11 +79,12 @@ std::string get_html_content(const Link& link)
 
 			beast::error_code ec;
 			stream.shutdown(ec); // Shut down SSL on the stream.
-			if (ec == net::error::eof) {
+			if (ec == net::error::eof) 
+			{
 				ec = {};
 			}
-
-			if (ec) {
+			if (ec) 
+			{
 				throw beast::system_error{ec};
 			}
 		}
@@ -108,13 +101,11 @@ std::string get_html_content(const Link& link)
 			req.set(http::field::host, host);
 			req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
 
-
 			http::write(stream, req); // Send the HTTP request to the remote host.
 
 			beast::flat_buffer buffer; // Buffer is used for reading and must be persisted.
 
 			http::response<http::dynamic_body> res; // Receive the HTTP response.
-
 
 			http::read(stream, buffer, res); // Receive the HTTP response.
 
@@ -132,7 +123,6 @@ std::string get_html_content(const Link& link)
 
 			if (ec && ec != beast::errc::not_connected)
 				throw beast::system_error{ec};
-
 		}
 	}
 	catch (const std::exception& e)
